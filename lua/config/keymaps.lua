@@ -43,6 +43,33 @@ vim.keymap.set("n", "<leader>rc", function()
   vim.cmd("botright split | resize 12 | terminal " .. cmd)
 end, { desc = "Run C code" })
 
+vim.keymap.set("n", "<leader>rp", function()
+  if vim.bo.buftype ~= "" or vim.bo.filetype ~= "python" then
+    vim.notify("Open a Python file first", vim.log.levels.WARN)
+    return
+  end
+
+  local file = vim.api.nvim_buf_get_name(0)
+  if file == "" then
+    vim.notify("Save the Python file first", vim.log.levels.WARN)
+    return
+  end
+
+  local python = vim.env.VIRTUAL_ENV and (vim.env.VIRTUAL_ENV .. "/bin/python") or "python3"
+  if vim.fn.executable(python) ~= 1 then
+    vim.notify("Python interpreter not found: " .. python, vim.log.levels.ERROR)
+    return
+  end
+
+  vim.cmd.write()
+  vim.cmd("botright 12new")
+  vim.fn.jobstart({ python, "-u", file }, {
+    cwd = vim.fs.dirname(file),
+    term = true,
+  })
+  vim.cmd.startinsert()
+end, { desc = "Run Python code" })
+
 vim.keymap.set("n", "<leader>rj", function()
   if vim.bo.buftype ~= "" or vim.bo.filetype ~= "java" then
     vim.notify("Open a Java file first", vim.log.levels.WARN)
@@ -84,3 +111,15 @@ vim.keymap.set("n", "<leader>rj", function()
 
   vim.cmd("botright 15split | terminal " .. cmd)
 end, { desc = "Run Java code" })
+
+vim.keymap.set(
+  "n",
+  "<leader>ai",
+  "<cmd>Copilot toggle<CR>", {
+     desc = "Toggle Copilot",
+  }
+)
+
+vim.keymap.set("i", "<C-l>", function ()
+  require("blink.cmp").show()
+end, { desc = "Show completion list" })

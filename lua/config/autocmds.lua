@@ -10,7 +10,7 @@
 vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
   callback = function()
     if vim.bo.modified and vim.fn.expand("%") ~= "" then
-      vim.cmd("write")
+      vim.cmd("silent write")
     end
   end,
 })
