@@ -41,6 +41,16 @@ Add `export PATH="$HOME/.local/bin:$PATH"` to your server shell's `~/.bashrc` or
 ln -sfn "$(command -v fdfind)" "$HOME/.local/bin/fd"
 ```
 
+Install the Tree-sitter CLI for parser installation (the current LazyVim requirement is version 0.26.1 or newer):
+
+```sh
+case "$(uname -m)" in x86_64) ts_arch=x64 ;; aarch64) ts_arch=arm64 ;; esac
+curl -fL "https://github.com/tree-sitter/tree-sitter/releases/download/v0.27.1/tree-sitter-cli-linux-${ts_arch}.zip" -o /tmp/tree-sitter-cli.zip
+unzip -o /tmp/tree-sitter-cli.zip -d "$HOME/.local/bin"
+chmod u+x "$HOME/.local/bin/tree-sitter"
+tree-sitter --version
+```
+
 If Neovim is already configured on the server, back up its config first. Then clone this repository and start Neovim:
 
 ```sh
